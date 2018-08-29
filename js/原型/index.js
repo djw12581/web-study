@@ -1,0 +1,1 @@
+console.log(Object.prototype.__proto__ )
