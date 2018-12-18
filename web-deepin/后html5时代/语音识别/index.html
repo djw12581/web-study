@@ -1,0 +1,146 @@
+<!DOCTYPE HTML>
+<head>
+<meta charset="utf-8">
+<meta name="author" content="Tencent-TGideas">
+<meta name="format-detection" content="telephone=no" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="description" content="">
+<meta name="keywords" content="">
+<title>捕捉用户麦克风web speech</title>
+<style>
+	body,dl,dd,ul,li,p{margin: 0;padding: 0;font-size: 12px;line-height: 22px;font-family: arial}
+	body{width: 100%;overflow-x: hidden;}
+	h2,h3{margin: 0;padding: 0;}
+	h1{text-align: center;}
+	h2{margin-top: 10px;}
+	table{width: 100%;}
+	table td, table th{padding: 3px;}
+	table th{background-color: #cee;}
+	dl{margin-top: 10px;}
+	dl{padding: 3px;}
+	dt{font-weight: bold;}
+	dl dt{padding: 5px;background-color: #cee;}
+	video{display: block;height: 100px;margin: 10px auto;}
+	.cap{margin: 5px 0;}
+	.cap input{width: 60%;padding: 5px;}
+	.cap button{padding: 5px;}
+	p{margin-top: 10px;}
+
+
+
+</style>
+<!-- 设计：brucewan | 重构：brucewan | 创建：2015-05-12 10:04:45 | 更新：| 团队博客：http://tgideas.qq.com/ -->
+</head>
+<body>
+<h1>捕捉麦克风之Web Speech</h1>
+<p>朗读文字测试：</p>
+<div class="cap">
+	<input type="text" class="text1" value="我是傻逼"/>
+	<button class="btn-speak">说话 </button>
+</div>
+<div class="cap">
+	<input type="text" class="text2" value="Are you OK?"/>
+	<button class="btn-speak-freak">变声说话 </button>
+</div>
+<p>语音识别测试：</p>
+<button class="btn-record-start">开始录制 </button>
+<button class="btn-record-end">停止录制 </button>
+
+<h2>测试结果：</h2>
+<table>
+	<tr><th>系统支持：</th><td>android chrome，>=ios 7</td></tr>
+	<tr><th>朗读文字：</th><td>android支持不稳定</td></tr>
+	<tr><th>语音识别：</th><td>测试失败，可能原因：请求被墙</td></tr>
+</table>
+<script>
+	// lib
+	var $ = function(className){return document.querySelector(className)};
+
+	// 正常发声
+	$('.btn-speak').addEventListener('touchend', function(){
+		var text = $('.text1').value;
+		var msg = new SpeechSynthesisUtterance(text);
+		window.speechSynthesis.speak(msg);
+	});
+
+	// 变声说话
+	$('.btn-speak-freak').addEventListener('touchend', function(){
+		var text = $('.text2').value;
+		var msg = new SpeechSynthesisUtterance();
+		var voices = window.speechSynthesis.getVoices();
+		msg.voice = voices[10]; 
+		msg.voiceURI = 'native';
+		msg.volume = 1; // 0 to 1
+		msg.rate = 1; // 0.1 to 10
+		msg.pitch = 2; //0 to 2
+		msg.text = text;
+		msg.lang = 'en-US';
+		msg.onend = function(e) {
+			console.log('花费时间： ' + event.elapsedTime + ' s.');
+		};
+		speechSynthesis.speak(msg);
+	});
+
+	// 语音识别
+	var newRecognition = new webkitSpeechRecognition();
+	newRecognition.continuous = true;
+	newRecognition.interimResults = true;
+	
+	var final_transcript = "";
+	$('.btn-record-start').addEventListener('touchstart', function(){
+		newRecognition.start();
+	});
+	$('.btn-record-end').addEventListener('touchend', function(){
+		newRecognition.stop();
+	});
+
+	newRecognition.onresult = function(event){
+		var interim_transcript = ''; 
+		for (var i = event.resultIndex; i < event.results.length; ++i) {
+			if (event.results[i].isFinal) {
+				final_transcript += event.results[i][0].transcript;//最后确定的字符串&nbsp;
+			} else {
+				interim_transcript += event.results[i][0].transcript;//未到最后一个字符就累加缓冲字符串
+			}
+		}
+		final_transcript = capitalize(final_transcript);
+		alert(final_transcript+".");
+		alert(linebreak(interim_transcript));
+	};
+
+	newRecognition.onend = function(e){
+		console.log('onend');
+		console.log(e);
+	}
+
+	newRecognition.onsoundend = function(e){
+		console.log('onsoundend');
+		console.log(e);
+	}
+	newRecognition.onspeechend = function(e){
+		console.log('onspeechend');
+		console.log(e);
+	}
+
+
+	var two_line = /\n\n/g;
+	var one_line = /\n/g;
+	function linebreak(s) {
+		return s.replace(two_line, '<p></p>').replace(one_line, '<br>');
+	}
+
+	var first_char = /\S/;
+	function capitalize(s) {
+		return s.replace(first_char, function(m) {
+			return m.toUpperCase();
+		});
+	}
+
+
+</script>	
+</body>
+</html>
+
+<!--[if !IE]>|xGv00|f18ec9a283b09977d86755b5e759bf0d<![endif]-->

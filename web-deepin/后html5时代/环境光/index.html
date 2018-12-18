@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<head>
+<meta charset="utf-8">
+<meta name="author" content="Tencent-TGideas">
+<meta name="format-detection" content="telephone=no" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="description" content="">
+<meta name="keywords" content="">
+<title>环境光Ambient Light</title>
+<style>
+	html{background-color: #fff;}
+	html,body{width: 100%;height: 100%;}
+	body,dl,dd, p{margin: 0;padding: 0;font-size: 12px;line-height: 22px;font-family: arial}
+	h2,h3{margin: 0;padding: 0;}
+	h1{text-align: center;}
+	h2{padding: 10px;margin-top: 10px;}
+	table{width: 100%;text-align: left;}
+	table td, table th{padding: 3px 3px 3px 10px;}
+	table th{}
+	dl{margin-top: 10px;}
+	dl{padding: 3px;}
+	dt{font-weight: bold;}
+	dl dt{padding: 5px;}
+	#info{padding: 10px;}
+	body{border-top: 1px solid #fff;}
+
+</style>
+<!-- 设计：brucewan | 重构：brucewan | 创建：2015-05-12 10:04:45 | 更新：| 团队博客：http://tgideas.qq.com/ -->
+</head>
+<body>
+      <h1>环境光Ambient Light</h1>
+	<div  id="info"></div>
+	<h2>测试结论</h2>
+	<table>
+		<tr><th width="80">系统要求</th><td>android firefox</td></tr>
+	</table>
+
+	<script>
+	// lib
+	var $ = function(className){return document.querySelector(className)};
+	var domInfo = $('#info');
+
+
+	if (!('ondevicelight' in window)) {
+		domInfo.innerHTML = '你的设备不支持环境光Ambient Light API';
+	} else {
+		var lightValue = document.getElementById('dl-value');
+
+		window.addEventListener('devicelight', function(event) {
+			domInfo.innerHTML = '当前环境光线强度为：' + Math.round(event.value) + 'lux';
+
+			var backgroundColor = 'rgba(0,0,0,'+(1-event.value/100) +')';
+			document.body.style.backgroundColor = backgroundColor;
+			if(event.value < 50) {
+				document.body.style.color = '#fff'
+			} else {
+				document.body.style.color = '#000'
+			}
+
+			// if (event.value < 50) {
+			// 	document.body.className = 'dark-theme';
+			// } else if (event.value < 10000) {
+			// 	document.body.className = 'classic-theme';
+			// } else {
+			// 	document.body.className = 'light-theme';
+			// }
+		});
+	}
+	</script>
+
+</body>
+</html>
+
+<!--[if !IE]>|xGv00|d878746eaa6b386cb44bb4cd44f422e3<![endif]-->

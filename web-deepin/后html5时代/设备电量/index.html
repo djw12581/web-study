@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<head>
+<meta charset="utf-8">
+<meta name="author" content="Tencent-TGideas">
+<meta name="format-detection" content="telephone=no" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="description" content="">
+<meta name="keywords" content="">
+<title>地理定位Geolocation</title>
+<style>
+	body,dl,dd, p{margin: 0;padding: 0;font-size: 12px;line-height: 22px;font-family: arial}
+	h2,h3{margin: 0;padding: 0;}
+	h1{text-align: center;}
+	h2{margin-top: 10px;}
+	table{width: 100%;}
+	table td, table th{padding: 3px;}
+	table th{background-color: #cee;}
+	dl{margin-top: 10px;}
+	dl{padding: 3px;}
+	dt{font-weight: bold;}
+	dl dt{padding: 5px;background-color: #cee;}
+	#info{padding: 10px;}
+
+</style>
+<!-- 设计：brucewan | 重构：brucewan | 创建�?2015-05-12 10:04:45 | 更新：| 团队博客：http://tgideas.qq.com/ -->
+</head>
+<body>
+<script charset="utf-8" src="https://map.qq.com/api/js?v=1"></script>
+<h1>设备电量Battery API</h1>
+<div  id="info"></div>
+<h2>测试结论</h2>
+<table>
+	<tr><th width="80">系统要求</th><td>android firefox</td></tr>
+	<tr><th>测试问题1</th><td>QQ浏览器与UC浏览器支持该接口，但未正确显示设备电池信�?</td></tr>
+	<tr><th>测试问题2</th><td>caniuse显示android chrome42支持该接口，实测不支�?</td></tr>
+</table>
+<script>
+
+	// lib
+	var $ = function(className){return document.querySelector(className)};
+	var domInfo = $('#info');
+	var battery = navigator.battery || navigator.webkitBattery || navigator.mozBattery || navigator.msBattery;
+	var str = '';
+	if (battery) {
+		str += '<p>你的浏览器支持HTML5 Battery API</p>';
+		if(battery.charging) {
+			str += '<p>你的设备正在充电</p>';
+		} else {
+			str += '<p>你的设备未处于充电状�?</p>';
+		}
+		str += '<p>你的设备剩余'+ parseInt(battery.level*100)+'%的电�?</p>';
+	} else {
+		str += '<p>你的浏览器不支持HTML5 Battery API</p>';
+	}
+	domInfo.innerHTML = str;
+
+</script>
+</body>
+</html>
+
+<!--[if !IE]>|xGv00|f2739f76bf6d9348fefb061c3d91e060<![endif]-->
