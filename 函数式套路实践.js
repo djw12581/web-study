@@ -60,7 +60,7 @@ const setPort = (props) => {
     return props + status
 }
 
-const result = validateAble('1', compose(is.empty))
+const result = validateAble('1', is.empty)
     .map(compose(coupon, discount, double, setPort))
     .fold(e => '参数是空值', c => c)
     // .inspect()
