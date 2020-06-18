@@ -144,7 +144,7 @@ const init = x => {
         .map(compose(step1, step2, step3))
         .fold(e => `是1 ${e}`, c => c)
 
-    const oneResult = validateAble(x, is.empty)
+    const result = validateAble(x, is.empty)
         .map(compose(step1, step2))
         .fold(e => `是空 ${e}`, c => oneResult)
 
